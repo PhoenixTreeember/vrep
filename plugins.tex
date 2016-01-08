@@ -1,0 +1,134 @@
+\secrel{Плагины}\label{plugins}
+\cp{http://www.coppeliarobotics.com/helpFiles/en/plugins.htm}
+
+A plugin is a shared library (e.g. a dll) that is automatically loaded by 
+V-REP's main client application at program start-up (in a future release, it 
+will also be possible to load/unload plugins on-the-fly). It allows V-REP's
+functionality to be extended by user-written functions (in a similar way as 
+with add-ons). The language can be any language able to generate a shared 
+library and able to call exported C-functions (e.g. in the case of Java, 
+refer to GCJ and IKVM). A plugin can also be used as a wrapper for running 
+code written in other languages or even written for other microcontrollers 
+(e.g. a plugin was written that handles and executes code for Atmel 
+microcontrollers).
+
+Plugins are usually used to customize the simulator and/or a particular 
+simulation. Often, plugins are only used to provide a simulation with custom
+Lua commands, and so are used in conjunction with scripts. Other times, 
+plugins are used to provide V-REP with a special functionality requiring 
+either fast calculation capability (scripts are most of the times slower 
+than compiled languages) or an interface to a hardware device (e.g. a real 
+robot).
+
+Each plugin is required to have following 3 entry point procedures:
+\begin{verbatim}
+extern "C" __declspec(dllexport) unsigned char v_repStart(void* reserved,int reservedInt);
+extern "C" __declspec(dllexport) void v_repEnd();
+extern "C" __declspec(dllexport) void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData);
+\end{verbatim}
+
+If one procedure is missing then the plugin will be unloaded and won't be 
+operational. Refer to the console window at start-up for the loading status 
+of plugins. Following briefly describes above three entry point purpose:
+
+\subsubsection{v\_repStart}
+
+This procedure will be called one time just after the main client application 
+loaded the plugin. The procedure should:
+
+\begin{itemize}[nosep]
+\item check whether the version of V-REP is same or higher than the one that 
+	was used to develop the plugin (just make sure all commands you use in the 
+	plugin are supported!).
+\item allocate memory, and prepare GUI related initialization work (if required).
+\item register custom Lua functions (if required).
+\item register custom Lua variables (if required) .
+\item return the version number of this plugin if initialization was 
+	successful, otherwise 0. If 0 is returned, the plugin is unloaded and 
+	won't be operational.
+\end{itemize}
+
+\subsubsection{v\_repEnd}
+
+This procedure will be called one time just before the simulation loop exits. 
+The procedure should release all resources reserved since 
+\verb|v_repStart|\ was called.
+
+\subsubsection{v\_repMessage}
+
+This procedure will be called very often while the simulator is running. The 
+procedure is in charge of monitoring messages of interest and reacting to them. 
+It is important to react to following events (best by intercepting the 
+\verb|sim_message_eventcallback_instancepass|\ message) depending on your 
+plugin's task:
+
+\begin{itemize}[nosep]
+\item 
+When objects were created, destroyed, scaled, or when models are loaded: make 
+sure you reflect the change in the plugin (i.e. synchronize the plugin with
+the scene content)
+\item 
+When scenes were loaded or the undo/redo functionality called: make sure you 
+erase and reconstruct all plugin objects that are linked to the scene content
+\item 
+When the scene was switched: make sure you erase and reconstruct all plugin 
+objects that are linked to the scene content. In addition to this, remember
+that a scene switch will discard handles of following items:
+\begin{itemize}[nosep]
+\item communication tubes
+\item signals
+\item banners
+\item drawing objects
+\item etc.
+\end{itemize}
+\item 
+When the simulator is in an edit mode: make sure you disable any "special 
+functionality" provided by the plugin, until the edit mode was ended. In 
+particular, make sure you do not programmatically select scene objects.
+\item 
+When a simulation was launched: make sure you initialize your plugin elements 
+if needed
+\item 
+When a simulation ended: make sure you release any memory and plugin elements
+that are only required during simulation
+\item 
+When the object selection state was changed, or a dialog refresh message was 
+sent: make sure you actualize the dialogs that the plugin displays
+\end{itemize}
+
+Refer to the messages of type \verb|sim_message_eventcallback_|\ for more 
+details. When writing plugins several additional points have to be observed 
+or taken into account:
+
+%Plugins have to be put into the same directory as the main client application and respect following naming: "v_repExtXXXX.dll" (Windows), "libv_repExtXXXX.dylib" (Mac OSX), "libv_repExtXXXX.so" (Linux), where "XXXX" is the name of the plugin. Use at least 4 characters and don't use underscores (except the one in second position obviously) since the plugin would be ignored (however you should use underscores when your plugin itself loads some additional libraries (e.g. language resources like "v_repExtXXXX_de.dll", etc.)).
+
+%When registering customized Lua-functions or Lua-variables, try using a prefix and stick to it for all functions and variables that the module registers (e.g. "simExtLab_testMemory", "simExt_lab_error_value", etc.). Avoid using the same prefix as V-REP's functions ("sim"). It is recommended that you use the "simExtXXXX_" prefix.
+
+%Threads created in the plugin should be used very carefully, and should never call any simulator command (use them for background calculations or communication with hardware).
+
+%You are free to compile your plugin with whatever compiler you wish. If, however, you wish to write a Qt plugin (i.e. a plugin using the Qt framework) you should remember following:
+
+%You are required to compile the plugin with the exact same Qt version as the one used to compile V-REP. Have a look at the V-REP [Help --> About] menu bar item for details about Qt version
+
+%You should compile the plugin with the same compiler as V-REP (MinGW on Windows, and GCC on Mac OSX and Linux)
+
+%For more information on plugins, refer to following projects located in V-REP's installation directory:
+
+%programming/v_repExtPluginSkeleton: represents a plugin template that you can use to create your own plugin.
+%programming/v_repExtVision: a plugin that handles specific vision tasks (e.g. simulation of the Velodyne sensor, or simulation of an omnidirectional camera).
+%programming/v_repExtSimpleFilter: illustrates how to write a customized image processing filter for vision sensors. The plugin is a Qt project.
+%programming/v_repExtBubbleRob: illustrates how to add customized Lua functions and how to handle several specific models. Refer also to the related plugin tutorial.
+%programming/v_repExtK3: the plugin related to the KheperaIII model.
+%programming/v_repExtRemoteApi: the plugin related to the remote API functionality (server side).
+%programming/ros_packages/vrep_plugin: the ROS package allowing you to build the ROS plugin for V-REP.
+%programming/v_repExtMtb: illustrates a Qt plugin which integrates a robot language interpreter (or other emulator) into V-REP. Refer also to its related tutorial.
+
+Recommended topics
+
+The main client application
+
+Plugin tutorial
+
+Robot language interpreter plugin tutorial
+
+

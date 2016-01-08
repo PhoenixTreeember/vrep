@@ -1,0 +1,61 @@
+\secly{Установка}\label{install}
+
+\begin{description}
+	\item{\vrep} \href{http://www.coppeliarobotics.com/downloads.html}{скачайте}
+		и установите\note{\menu{Next>Next>Next}} версию \emph{Pro Edu}
+
+	\item{\prog{MinGW}} для сборки плагинов и интерпретатора \bi\ нужен 
+		компилятор \cpp. Сам \vrep\ собран с помощью GNU G++ (MinGW), поэтому
+		\emph{написание плагинов с использованием Visual C не поддерживается}.
+		
+		Скачайте инсталлятор
+		\href{http://www.mingw.org/}{MinGW}\ и установите пакеты
+		\prog{g++}, \prog{flex}\ и \prog{bison}. 
+
+		\menu{\file{mingw-get-setup.exe}>Install>Directory>\file{C:/MinGW}}
+
+		\menu{\checkbox\ \ldots\ also install support for the GUI}
+		\menu{\checkbox\ \ldots\ in the start menu}
+		\menu{\uncheckbox\ \ldots\ on the desktop}
+
+		\menu{Continue>Continue}
+
+		\menu{Basic Setup}
+
+		\menu{\checkbox\ \file{mingw32-base}>\lms>Mark for Installation}
+
+		\menu{\checkbox\ \file{mingw32-gcc-g++}}
+
+		\menu{All Packages>MSYS>MinGW Developer Toolkit}
+
+		\menu{\checkbox\ \file{msys-bison.bin}}
+
+		\menu{\checkbox\ \file{msys-flex.bin}}
+
+		\menu{Installation>Apply Changes>Apply>Close}
+
+Для запуска утилит нужно добавить пути поиска в системную переменную \verb|PATH|
+
+\menu{\winstart>Компьютер>\rms>Свойства>Дополнительные параметры>Переменные среды}
+
+\menu{Переменные среды пользователя...}
+
+\verb|PATH = C:\MinGW\msys\1.0\bin;C:\MinGW\bin;...|
+
+\end{description}
+
+\subsubsection{Обновление}
+
+\begin{description}
+
+\item{\prog{MinGW}}
+
+\menu{\winstart>Все программы>MinGW Installation Manager}
+
+\menu{Installation>Update Catalogue>Close}
+
+\menu{Installation>Mark All Upgrades}
+
+\menu{Installation>Apply Changes}
+
+\end{description}

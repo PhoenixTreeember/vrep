@@ -1,2 +1,3 @@
 @start .
-@gvim -p Makefile VREP.tex bat.bat
+@start texworks VREP.pdf
+@gvim -p Makefile VREP.tex bib.tex bat.bat
