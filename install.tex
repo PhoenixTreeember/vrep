@@ -23,14 +23,20 @@
 		\menu{Basic Setup}
 
 		\menu{\checkbox\ \file{mingw32-base}>\lms>Mark for Installation}
+		отладчик \prog{gdb}\ и утилита сборки проекта \prog{make}.
 
 		\menu{\checkbox\ \file{mingw32-gcc-g++}}
+		компиляторы \prog{gcc}\note{чистый Си}\ и \prog{g++}\note{\cpp},
+		\prog{binutils}\note{линкер, ассемблер i386, утилиты работы с 
+		объектными файлами .elf}
 
 		\menu{All Packages>MSYS>MinGW Developer Toolkit}
 
 		\menu{\checkbox\ \file{msys-bison.bin}}
+		генератор синтаксических анализаторов \prog{bison}\note{yacc}\ref{parser}
 
 		\menu{\checkbox\ \file{msys-flex.bin}}
+		генератор лексеров \prog{flex}\note{lex}\ref{lexer}
 
 		\menu{Installation>Apply Changes>Apply>Close}
 
@@ -41,6 +47,12 @@
 \menu{Переменные среды пользователя...}
 
 \verb|PATH = C:\MinGW\msys\1.0\bin;C:\MinGW\bin;...|
+
+\item{\prog{LLVM}} фреймворк для разработки компиляторов, трансляторов,
+статических анализаторов и оптимизаторов кода, а \prog{clang}\ --- компилятор
+Си/\cpp\ на его основе. Если вы хотите ускорить интерпретатор вашего скриптового
+языка, добавив в него динамическую компиляция в машинный код, установка, сборка
+и установка LLVM подробно рассмотрена в \cite{lexman}.
 
 \end{description}
 

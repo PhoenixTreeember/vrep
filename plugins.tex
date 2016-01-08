@@ -21,11 +21,14 @@ than compiled languages) or an interface to a hardware device (e.g. a real
 robot).
 
 Each plugin is required to have following 3 entry point procedures:
-\begin{verbatim}
-extern "C" __declspec(dllexport) unsigned char v_repStart(void* reserved,int reservedInt);
-extern "C" __declspec(dllexport) void v_repEnd();
-extern "C" __declspec(dllexport) void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData);
-\end{verbatim}
+\begin{lstlisting}[language=C++]
+extern "C" __declspec(dllexport)
+	unsigned char v_repStart(void* reserved,int reservedInt);
+extern "C" __declspec(dllexport)
+	void v_repEnd();
+extern "C" __declspec(dllexport)
+	void* v_repMessage(int message,int* auxiliaryData,void* customData,int* replyData);
+\end{lstlisting}
 
 If one procedure is missing then the plugin will be unloaded and won't be 
 operational. Refer to the console window at start-up for the loading status 
