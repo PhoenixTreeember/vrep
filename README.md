@@ -1,2 +1,1 @@
-# vrep
-VREP projects
+# робосимулятор VREP 
