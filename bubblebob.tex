@@ -1,1 +1,63 @@
-\secrel{BubleBob}\label{bublebob}
+\secrel{BubbleRob}\label{bublerob}
+
+\cp{\url{http://www.coppeliarobotics.com/helpFiles/en/bubbleRobTutorial.htm}}
+
+This tutorial will try to introduce quite many \vrep\ functionalities while 
+designing the simple mobile robot \file{BubbleRob}. 
+
+The \vrep\ scene file 
+related to this tutorial is located in \vrep's installation folder's 
+\file{tutorials/BubbleRob}\ folder. Following figure illustrates the 
+simulation scene that we will design:
+
+\figx{fig/bubble/01.jpg}{height=0.5\textheight}
+
+Since this tutorial will fly over many different aspects, make sure to also 
+have a look at the other tutorials, mainly the tutorial about building a 
+simulation model\ \ref{buildmodel}. First of all, freshly start \vrep. 
+The simulator displays 
+a default scene. We will start with the body of \file{BubbleRob}.
+
+We add a primitive sphere of diameter 0.2 to the scene with
+\menu{Menu bar>Add>Primitive shape>Sphere}. We adjust the X-size item to 0.2, 
+then click \keys{OK}. The created sphere will appear in the visibility layer 
+1 by default, and be dynamic and respondable\note{since we kept the item 
+\checkbox\ Create dynamic and respondable shape enabled}. This means that 
+BubbleRob's body will be falling and able to react to collisions with other 
+respondable shapes\note{i.e. simulated by the physics engine}. We can see 
+this is the shape dynamics properties: items Body is respondable and 
+\checkbox\ Body is dynamic are enabled. We start the simulation\note{via the 
+toolbar button, or by pressing \keys{Ctrl+Space}\ in the scene window}, and 
+copy-and-paste the created sphere with
+\menu{Menu bar>Edit>Copy selected objects}\ then \menu{Edit>Paste buffer}, or 
+with \keys{Ctrl+C}\ then \keys{Ctrl+V}: the two spheres will react to 
+collision and roll away. We stop the simulation: the duplicated sphere will 
+automatically be removed. This default behaviour can be modified in the 
+simulation dialog.
+
+\figx{fig/bubble/02.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/03.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/04.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/05.jpg}{height=0.1\textheight}
+
+\figx{fig/bubble/06.jpg}{height=0.1\textheight}
+
+\figx{fig/bubble/07.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/08.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/09.jpg}{height=0.1\textheight}
+
+\figx{fig/bubble/10.jpg}{height=0.1\textheight}
+
+\figx{fig/bubble/11.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/12.jpg}{height=0.1\textheight}
+
+\figx{fig/bubble/13.jpg}{height=0.5\textheight}
+
+\figx{fig/bubble/14.jpg}{height=0.1\textheight}
+
