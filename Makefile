@@ -5,9 +5,9 @@ default: work
 .PHONY: pdf
 pdf: $(MODULE).pdf
 
-TEX = $(MODULE).tex bib.tex intro.tex install.tex
+TEX = $(MODULE).tex bib.tex headmisc.tex intro.tex install.tex
 TEX += tutors.tex habr57.tex bubblebob.tex buildmodel.tex
-TEX += extension.tex plugins.tex
+TEX += extension.tex plugins.tex dynamics.tex
 
 TEX += excontroller.tex chscript.tex ctlplugin.tex remoteapi.tex 
 TEX += rosnode.tex sockets.tex

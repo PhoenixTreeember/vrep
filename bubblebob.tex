@@ -1,60 +1,109 @@
-\secrel{BubbleRob}\label{bublerob}
+\secrel{\bubblerob}\label{bublerob}
 
 \cp{\url{http://www.coppeliarobotics.com/helpFiles/en/bubbleRobTutorial.htm}}
 
-This tutorial will try to introduce quite many \vrep\ functionalities while 
-designing the simple mobile robot \file{BubbleRob}. 
+В этом разделе учебника мы попытаемся освоить множество основных функций
+\vrep\ в процессе создания простейшего робота \bubblerob.
+Файл \termdef{сцена}{сцены} для этого раздела находится  в каталоге учебников 
+\vrep\ \file{tutorials/BubbleRob}. 
 
-The \vrep\ scene file 
-related to this tutorial is located in \vrep's installation folder's 
-\file{tutorials/BubbleRob}\ folder. Following figure illustrates the 
-simulation scene that we will design:
+\clearpage
+\fig{\\Этот скриншот иллюстрирует сцену, которую мы будем симулировать 
+в нашем первом учебном проекте}{fig/bubble/01.jpg}{width=0.95\textwidth}
+\clearpage
 
-\figx{fig/bubble/01.jpg}{height=0.5\textheight}
+Так как этот раздел охватывает множество различных областей использовния \vrep,
+не забудьте потом ознакомиться с другими разделами, особенно с разделом
+о создании качественных моделей объектов \ref{buildmodel}. 
 
-Since this tutorial will fly over many different aspects, make sure to also 
-have a look at the other tutorials, mainly the tutorial about building a 
-simulation model\ \ref{buildmodel}. First of all, freshly start \vrep. 
-The simulator displays 
-a default scene. We will start with the body of \file{BubbleRob}.
+Итак, после начального запуска \vrep\ симулятор показывает пустую
+\term{сцену}\ по умолчанию\ --- несколько \termdef{источник света}{источников
+света}, стандартная \termdef{камера}{камера}, и единственный
+\termdef{3D объект}{3D объект}: плоскоть пола. Начнем с создания тушки
+\bubblerob а.
 
-We add a primitive sphere of diameter 0.2 to the scene with
-\menu{Menu bar>Add>Primitive shape>Sphere}. We adjust the X-size item to 0.2, 
-then click \keys{OK}. The created sphere will appear in the visibility layer 
-1 by default, and be dynamic and respondable\note{since we kept the item 
-\checkbox\ Create dynamic and respondable shape enabled}. This means that 
-BubbleRob's body will be falling and able to react to collisions with other 
-respondable shapes\note{i.e. simulated by the physics engine}. We can see 
-this is the shape dynamics properties: items Body is respondable and 
-\checkbox\ Body is dynamic are enabled. We start the simulation\note{via the 
-toolbar button, or by pressing \keys{Ctrl+Space}\ in the scene window}, and 
-copy-and-paste the created sphere with
-\menu{Menu bar>Edit>Copy selected objects}\ then \menu{Edit>Paste buffer}, or 
-with \keys{Ctrl+C}\ then \keys{Ctrl+V}: the two spheres will react to 
-collision and roll away. We stop the simulation: the duplicated sphere will 
-automatically be removed. This default behaviour can be modified in the 
-simulation dialog.
+Добавляем в сцену \termdef{примитив}{примитив}: сферу диаметром
+0.2\,\note{\vrep\ для линейных размеров использует \emph{метры}}, через меню
+\menu{Menu>Add>Primitive shape>Sphere}\note{или
+\menu{\rms>Add>Primitive shape>Sphere}\ непосредственно в окне сцены}.
+Настройте размер \verb|X-size [m] = 0.2|, и нажмите \keys{OK}.
+Созданная сфера будет создана на \termdef{слой}{слое} 1, и будет
+\term{динамичной}\ и \term{реагирующей}\note{так как мы оставили включенной
+опцию \checkbox\ Create dynamic and respondable shape}. 
 
-We also want the BubbleRob's body to by usable by the other calculation 
-modules (e.g. the minimum distance calculation module). For that reason, we
-enable Collidable, Measurable, Renderable and Detectable in the object 
-common properties for that shape, if not already enabled. If we wanted, we 
-could now also change the visual appearance of our sphere in the shape 
-properties.
+\begin{framed}\noindent
+\termdef{динамичность}{Динамичность} (dynamic)\ --- свойство объекта сцены,
+указывающий что при симуляции сцены для этого объекта будет применен расчет
+поведения с помошью одного из \term{физических движков}, поддерживаемых
+\vrep\ \ref{dynamics}.
 
-Now we open the position and translation dialog, select the sphere 
-representing BubbleRob's body, and in the dialog's section Object/item 
-translation \& position scaling operations, we enter 0.02 for Along Z. We 
-make sure that the Relative to-item is set to World. Then we click Translate
-selection. This translates all selected objects by 2\,cm along the absolute 
-Z-axis, and effectively lifted our sphere a little bit. In the scene 
-hierarchy, we double-click the sphere's name, so that we can edit its name.
-We enter bubbleRob and press enter.
+\noindent\termdef{реактивность объекта}{Реактивность объекта} включает/выключает
+использование \term{маски реактивности}\ при столкновениях. Подробнее
+в\ \ref{dynamics}
+\end{framed}
 
-Next we will add a proximity sensor so that BubbleRob knows when it is 
-approaching obstacles: we select
-\menu{Menu>Add>Proximity sensor>Cone type}. 
-In the orientation and rotation dialog, in section Object/item 
+Это значит что тушка \bubblerob а будет падать и реагировать на столкновения
+в другими \term{реактивными}\ объектами в сцене\note{то есть обрабатываться
+физическим движком}. Мы может посмотреть/изменить свойство реактивности
+в параметрах \checkbox\ Body is respondable и
+\checkbox\ Body is dynamic. 
+
+Запускаем симуляцию кнопкой \keys{\rms}\ на панели инструментов
+или нажатием \keys{Ctrl+пробел}\ с клавиатуры, 
+и \emph{при работающей симуляции}\ копируем созданную сферу
+через \menu{Menu>Edit>Copy selected objects}\ и \menu{Edit>Paste buffer},
+или кнопками \keys{Ctrl+C}\ и\ \keys{Ctrl+V}: две пересекающиеся сферы реагируют
+между собой и разлетаются в стороны. 
+Останавливаем симуляцию \keys{Ctrl+пробел}: дублирующая сфера автоматически удаляется.
+Это поведение может изменено в диалоге настроек симуляции.
+
+Мы также хотим чтобы тушка \bubblerob а была доступна для других вичислительных
+модулей, например для модуля вычисления дистанции. Поэтому мы включаем свойства
+\checkbox\ Collidable\note{столкновения}, \checkbox\ Measurable\note{измерения},
+\checkbox\ Renderable\note{рендеринг}\ и
+\checkbox\ Detectable\note{детектируемый}\ в свойства объекта.
+Если вы хотите, также можно поменять визуальное представление сферы\ --- цвет
+и визуальные свойства материала. 
+Для этого выделите объект \keys{\lms}\ на сцене или в дереве сцены,
+и нажмите кнопку на левом тулбаре\\
+\fig{\ Scene object properties}{fig/button/ObjectProperties.jpg}{height=0.1\textheight}.
+
+Проверим свойства динамики\
+\menu{Scene object properties>Common>Object special properties}\\
+\checkbox\ Collidable\
+\checkbox\ Measurable\
+\checkbox\ Renderable\
+\checkbox\ Detectable\\
+и поменяем цвет на красный\
+\menu{Scene object properties>Shape>Adjust color>Ambient/Diffuse>RGB 1.0/0.0/0.0}.
+
+Теперь поднимем сферу, выделив ее, и используем кнопку в верхнем тулбаре\\
+\fig{\ Object/item shift}{fig/button/shift.jpg}{height=0.1\textheight}.
+
+\menu{Object/item shift>Position/Translations}
+
+Введите в поле \menu{Along Z>0.02}\ --- при каждом нажатии на кнопку
+\menu{Translate selection}\ значения полей \menu{Along}\ будут добавляться
+к координатам объекта \menu{..-coord}, в результате объект будет
+сдвигаться\note{Translate}. Убедитесь что включен
+\menu{Raltive to>\checkbox\ World}. Одно нажатие \menu{Translate}\ сдвинет
+объект на 2\,см вверх по абсолютной Z-оси,\\\verb|Z-coord [m] = +1.2000e-01|.
+
+Двойным \keys{\lms\lms}\ в дереве сцены включите редактирование имени сферы,
+и переименуйте ее в \verb|bubbleRob|.
+
+\bigskip
+Теперь добавим к роботу \termdef{датчик приближения}{датчик
+приближения}\note{proximity sensor}, 
+чтобы \bubblerob\ знал когда он приближается к другим объектам:
+\menu{\rms>Add>Proximity sensor>Cone type}.
+Потом в дереве объектов перетащите \verb|Proximity_sensor|\ на
+\verb|bubbleRob|, сделав его \term{дочерним объектом}.
+
+Теперь нужно переместить и повернуть \term{конус чувствительности сенсора},
+используя кнопку\\
+\fig{\ Object/item rotate}{fig/button/rotate.jpg}{height=0.1\textheight}.
+
 rotation operations, we enter 90 for Around Y and for Around Z, then click
 Rotate selection. In the position and translation dialog, in section 
 Object/item position, we enter 0.1 for X-coord. and 0.12 for Z-coord. The 
@@ -153,7 +202,7 @@ For that we define a collection object. We click [Menu bar --> Tools -->
 Collections] to open the collection dialog. Alternatively we can also open 
 the dialog by clicking the appropriate toolbar button:
 
-\figx{fig/bubble/05.jpg}{height=0.1\textheight}
+\figx{fig/button/collections.jpg}{height=0.1\textheight}
 
 In the collection dialog, we click Add new collection. A new collection
 object appears in the list just below. For now the newly added collection 
@@ -171,7 +220,7 @@ with [Menu bar --> Tools --> Calculation module properties]. Alternatively
 we can also open the calculation module properties dialog with the
 appropriate toolbar button:
 
-\figx{fig/bubble/06.jpg}{height=0.1\textheight}
+\figx{fig/button/calcmod.jpg}{height=0.1\textheight}
 
 In the distance dialog, we click Add new distance object and select a 
 distance pair: [collection] bubbleRob\_collection - all other measurable 
@@ -248,7 +297,7 @@ Measurable, Renderable and Detectable. We do this in the object common
 properties. Now, while the cylinder is still selected, we click the 
 object translation toolbar button:
 
-\figx{fig/bubble/09.jpg}{height=0.1\textheight}
+\figx{fig/button/shift.jpg}{height=0.1\textheight}
 
 Now we can drag any point in the scene: the cylinder will follow the 
 movement while always being constrained to keep the same Z-coordinate. We 
@@ -259,7 +308,7 @@ to perform smaller shift steps. Holding down the ctrl key allows to move
 in an orthogonal direction to the regular direction(s). When done, select
 the camera pan toolbar button again:
 
-\figx{fig/bubble/10.jpg}{height=0.1\textheight}
+\figx{fig/button/pan.jpg}{height=0.1\textheight}
 
 We set a target velocity of 50 for the left motor and run the simulation: 
 the graph view now displays the distance to the closest obstacle and the 
@@ -314,7 +363,7 @@ Next, we want to be able to modulate BubbleRob's velocity with a custom
 user interface. To open the custom user interface dialog we click the
 appropriate toolbar button:
 
-\figx{fig/bubble/12.jpg}{height=0.1\textheight}
+\figx{fig/button/useriface.jpg}{height=0.1\textheight}
 
 We click Add new user interface and enter 2 for the Client y-size item 
 then click OK. A new custom user interface was added to the scene (in the
@@ -342,7 +391,7 @@ We can also add, remove or modify scripts via the script dialog which can
 be opened with [Menu bar --> Tools --> Scripts] or through the appropriate
 toolbar button:
 
-\figx{fig/bubble/14.jpg}{height=0.1\textheight}
+\figx{fig/button/file.jpg}{height=0.1\textheight}
 
 We double-click the little script icon that appeared next to bubbleRob's 
 name in the scene hierarchy: this opens the child script that we just added. 
