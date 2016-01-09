@@ -1,6 +1,10 @@
-.phony: default
-default: work
 MODULE = VREP
+
+.PHONY: default
+default: work
+.PHONY: pdf
+pdf: $(MODULE).pdf
+
 TEX = $(MODULE).tex bib.tex intro.tex install.tex
 TEX += tutors.tex habr57.tex bubblebob.tex buildmodel.tex
 TEX += extension.tex plugins.tex

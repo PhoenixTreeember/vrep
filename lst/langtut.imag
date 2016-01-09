@@ -1,0 +1,10 @@
+"REM" starts a comment line
+"SETLINVEL v": sets the prismatic joint velocity for next movements (v is in m/s)
+"SETROTVEL v": sets the revolute joint velocity for next movements (v is in degrees/s)
+"MOVE p1 p2 p3 p4": moves to joint positions (p1;p2;p3;p4) (in degrees except for p3 in meters)
+"WAIT x": waits x milliseconds
+"SETBIT y": sets the bit at position y (1-32) in the robot output port
+"CLEARBIT y": clears the bit at position y (1-32) in the robot output port
+"IFBITGOTO y label": if bit at position y (1-32) in the robot input port is set, jump to "label"
+"IFNBITGOTO y label": if bit at position y (1-32) in the robot input port is not set, jump to "label"
+"GOTO label": jumps to "label"
