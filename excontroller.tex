@@ -1,2 +1,141 @@
-\secrel{excontroller}\label{excontroller}
+\secrel{Внешние контроллеры}\label{excontroller}\secdown
 
+\cp{http://www.coppeliarobotics.com/helpFiles/en/externalControllerTutorial.htm}
+
+There are several ways one can control a robot or simulation in \vrep:
+
+\begin{itemize}
+
+\item The most convenient way is to write a child script that will handle the
+	behaviour of a given robot or model. It is the most convenient way, 
+	because child scripts are directly attached to scene objects, they will 
+	be duplicated together with their associated scene objects, they do not 
+	need any compilation with an external tool, they can run in threaded or 
+	non-threaded mode, they can be extended via custom Lua function or via 
+	a Lua extension library. Another major advantage in using child scripts:
+	there is no communication lag as with the last 3 methods mentioned in 
+	this section (i.e. the regular API is used), and child scripts are part
+	of the application main thread (inherent synchronous operation). There 
+	are several drawback to writing scripts however: you don't have the 
+	choice of the programming language, you can't have the fastest code, 
+	and you can't directly access external function libraries, except the
+	Lua extension libraries.
+
+\item Another way one can control a robot or a simulation is by writing a 
+	plugin. The plugin mechanism allows for callback mechanisms, custom Lua
+	function registration, and of course access to external function 
+	libraries. A plugin is often used in conjunction with child scripts 
+	(e.g. the plugin registers custom Lua functions, that, when called from 
+	a child script, will call back a specific plugin function). A major
+	advantage in using plugins is also that there is no communication lag 
+	as with the last 3 methods mentioned in this section (i.e. the regular 
+	API is used), and that a plugin is part of the application main thread 
+	(inherent synchronous operation). The drawbacks with plugins are: they
+	are more complicated to program, and they need to be compiled with an
+	external too. Refer also to the plugin tutorial.
+
+\item A third way one can control a robot or a simulation is by writing an 
+	external client application that relies on the remote API. This is a 
+	very convenient and easy way, if you need to run the control code from
+	an external application, from a robot or from another computer. This 
+	also allows you to control a simulation or a model (e.g. a virtual 
+	robot) with the exact same code as the one that runs the real robot. 
+	The remote API functionality relies on the remote API plugin (on the 
+	server side), and the remote API code on the client side. Both 
+	programs/projects are open source (i.e. can be easily extended or
+	translated for support of other languages) and can be found in the 
+	'programming' directory of V-REP's installation. Currently there are 
+	seven supported languages: C/C++, Python, Java, Matlab, Octave, 
+	Lua and Urbi.
+
+\item A forth way to control a robot or a simulation is via a ROS node. 
+	In a similar way as the remote API, ROS is a convenient way to have 
+	several distributed processes communicate with each other. While the 
+	remote API is very lightweight and fast, it allows only communication 
+	with V-REP. ROS on the other hand allows connecting virtually any 
+	number of processes with each other, and a large amount of compatible
+	libraries are available. It is however heavier and more complicated
+	than the remote API. Refer to the ROS interface for details.
+
+\item A fifth way to control a robot or a simulation is by writing an 
+	external application that communicates via various means (e.g. pipes, 
+	sockets, serial port, etc.) with a V-REP plugin or V-REP script. Two 
+	major advantages are the choice of programming language, which can be 
+	just any language, and the flexibility. Here also, the control code 
+	can run on a robot, or a different computer. This way of controlling 
+	a simulation or a model is however more tedious that the method with
+	the remote API.
+
+\end{itemize}
+
+The V-REP scene file related to this tutorial is "controlTypeExamples.ttt" 
+located in V-REP's "scenes" folder. Open the scene and run the simulation:
+
+\figx{fig/excontrol/01.jpg}{height=.5\textheight}
+
+The simulation illustrates the 5 control types previously mentioned: the 
+orange robot is controlled by an embedded child script, the blue robot is 
+controlled by a plugin, the purple robot is controlled via the remote API 
+and an external client application, the red robot is controlled via an 
+external ROS application, and the green robot is controlled by an external 
+server application via a custom socket communication. In all 5 cases, child 
+scripts are used, mainly to make the link with the outside world (e.g. 
+launch the correct client application, and pass the correct object handles 
+to it). There are two other ways one can control a robot, a simulation, or
+the simulator itself: by using customization scripts, or add-ons. They are
+however not recommended for control and should be rather used to handle
+functionality while simulation is not running.
+
+As an example, the child script linked to the purple robot has following 
+main tasks:
+\begin{itemize}[nosep]
+	\item Search for a free socket connection port
+	\item Start a remote API server service on the above port
+	\item Launch the controller application ("bubbleRobClient") with the
+		chosen connection port and some object handles as argument
+\end{itemize}
+
+As another example, the child script linked to the red robot has following 
+main tasks:
+\begin{itemize}[nosep]
+	\item Check if the ROS plugin for V-REP was loaded
+	\item Launch the controller application ("rosBubbleRob") with some object
+		handles as arguments
+\end{itemize}
+
+Yet, as another example, the child script linked to the green robot has 
+following main tasks:
+\begin{itemize}[nosep]
+	\item Search for a free socket connection port
+	\item Launch the controller application ("bubbleRobServer") with the 
+		chosen connection port as argument
+	\item Locally connect to the controller application
+	\item At each simulation pass, send the sensor values to the controller, 
+		and read the desired motor values from the controller
+	\item At each simulation pass, apply the desired motor values to
+		the robot's joints
+\end{itemize}
+
+The project files for the "bubbleRobClient", "rosBubbleRob", and
+"bubbleRobServer" applications are located in V-REP's installation 
+folder "programming".
+
+Run the simulation, and copy-and-paste all robots: you will see that the 
+duplicated robots will directly be operational, since their attached child 
+scripts are in charge of launching new instances of "bubbleRobClient", 
+"rosBubbleRob", "bubbleRobServer", or calling the appropriate plugin Lua
+extension function.
+
+Finally, notice that the green robot is controlled via "bubbleRobServer", 
+but that its child script acts as client that communicates with the server. 
+You could also imagine having the client part not inside of a child script, 
+but inside of a plugin. Such an example is illustrated in the robot 
+language interpreter integration tutorial \ref{langtutor}.
+
+\input{chscript}
+\input{ctlplugin}
+\input{remoteapi}
+\input{rosnode}
+\input{sockets}
+
+\secup
